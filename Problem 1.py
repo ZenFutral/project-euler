@@ -2,6 +2,8 @@
 # Find the sum of all the multiples of 3 or 5 below 1000.
 # Answer: 233168
 
+# I wanted to use this problem as an excuse to jam everything into nested list comprehension.
+
 limit : int = 1000
 divisors : tuple[int] = (3, 5)
 multiples : list[int] = []
