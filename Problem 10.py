@@ -14,8 +14,8 @@ def isPrime(number : int, primeList : int):
     return True
 
 def findPrimes(targetNumber : int):
-    primeList : list[int] = [2, 3]
-    numberToTest : int = 3
+    primeList = [2, 3]
+    numberToTest = 3
 
     while numberToTest < targetNumber:
         numberToTest += 2
@@ -27,9 +27,9 @@ def findPrimes(targetNumber : int):
     return primeList
 
 def run():
-    targetNumber : int = 2000000
-    primeList : list[int] = findPrimes(targetNumber)
-    answer : int = sum(primeList)
+    targetNumber = 2000000
+    primeList = findPrimes(targetNumber)
+    answer = sum(primeList)
     print(answer)
 
 run()
