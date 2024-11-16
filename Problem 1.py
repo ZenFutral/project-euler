@@ -4,15 +4,15 @@
 
 # I wanted to use this problem as an excuse to jam everything into nested list comprehension.
 
-limit : int = 1000
-divisors : tuple[int] = (3, 5)
-multiples : list[int] = []
+limit = 1000
+divisors = (3, 5)
+multiples = []
 
 
 [[multiples.append(num) for divisor in divisors 
     if (num % divisor == 0) and (num not in multiples)] 
     for num in range(limit)]
 
-answer : int = sum(multiples)
+answer = sum(multiples)
 
 print(answer)
