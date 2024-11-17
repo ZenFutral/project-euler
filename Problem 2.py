@@ -2,20 +2,39 @@
 # 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, ...
 # By considering the terms in the Fibonacci sequence whose values do not exceed four million, find the sum of the even-valued terms.
 # Answer: 4613732
+# Average Runtime: 0.0s
 
-sequence : list[int] = [1, 2]
-maximum : int = 4000000
-evenSequence : list[int] = []
+from time import time
+from statistics import mean
 
-while sequence[-1] <= maximum:
-    num1 : int = sequence[-1]
-    num2 : int = sequence[-2]
-    num3 : int = num1 + num2
+runCount = 10
+runDurations = []
 
-    sequence.append(num3)
+def run():
+    sequence : list[int] = [1, 2]
+    maximum : int = 4000000
+    evenSequence : list[int] = []
 
-[evenSequence.append(num) for num in sequence if num % 2 == 0]
+    while sequence[-1] <= maximum:
+        num1 : int = sequence[-1]
+        num2 : int = sequence[-2]
+        num3 : int = num1 + num2
 
-answer : int = sum(evenSequence)
+        sequence.append(num3)
 
-print(answer)
+    [evenSequence.append(num) for num in sequence if num % 2 == 0]
+
+    answer : int = sum(evenSequence)
+    return answer
+
+# ================================
+# NO PROBLEM LOGIC BELOW THIS LINE
+# ================================
+for count in range(runCount):
+    startTime = time()
+    answer = run()
+    runDurations.append(time() - startTime)
+
+averageRuntime = mean(runDurations)
+print(f"Answer: {answer}")
+print(f"Runtime: {round(averageRuntime, 10)}s")
