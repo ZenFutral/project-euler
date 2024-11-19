@@ -2,6 +2,10 @@
 # What is the sum of the digits of the number 2^1000.
 
 # Answer: 1366
+# Average Runtime: 0.0s
+
+from time import time
+from statistics import mean
 
 def run():
     power = 1000
@@ -13,5 +17,20 @@ def run():
 
     return answer
 
-answer = run()
-print(answer)
+# ================================
+# NO PROBLEM LOGIC BELOW THIS LINE
+# ================================
+
+runCount = 10
+runDurations = []
+
+for count in range(runCount):
+    print(f"Run: {count + 1}")
+    startTime = time()
+    answer = run()
+    runDurations.append(time() - startTime)
+
+averageRuntime = mean(runDurations)
+print(f"Answer: {answer}")
+print(f"Runtime: {round(averageRuntime, 3)}s")
+    
