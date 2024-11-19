@@ -26,7 +26,10 @@ numberGrid = [
 # What is the greatest product of four adjacent numbers in the same direction (up, down, left, right, or diagonally) in the 20x20 grid?
 
 # Answer: 70600674
+# Average Runtime: 0.001s
 
+from time import time
+from statistics import mean
 from math import prod
 
 def checkHorizontal(count : int, numberGrid : list[list[int]]):
@@ -89,7 +92,21 @@ def run():
     answer = max(productList)
     return answer
 
-answer = run()
-print(answer)
+# ================================
+# NO PROBLEM LOGIC BELOW THIS LINE
+# ================================
 
+runCount = 10
+runDurations = []
+
+for count in range(runCount):
+    print(f"Run: {count + 1}")
+    startTime = time()
+    answer = run()
+    runDurations.append(time() - startTime)
+
+averageRuntime = mean(runDurations)
+print(f"Answer: {answer}")
+print(f"Runtime: {round(averageRuntime, 3)}s")
+    
 
