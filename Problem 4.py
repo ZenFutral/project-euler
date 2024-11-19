@@ -1,6 +1,11 @@
 # A palindromic number reads the same both ways. The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 × 99.
 # Find the largest palindrome made from the product of two 3-digit numbers.
 # Answer: 906609
+# Average Runtime: 0.156s
+
+from time import time
+from statistics import mean
+
 
 def defineRange(digitCount : int):
     lowerstNumberStr : str = "1"
@@ -45,5 +50,21 @@ def run():
     answer : int = max(palList)
     return answer
 
-answer : int = run()
-print(answer)
+# ================================
+# NO PROBLEM LOGIC BELOW THIS LINE
+# ================================
+
+runCount = 10
+runDurations = []
+
+for count in range(runCount):
+    print(f"Run: {count + 1}")
+    startTime = time()
+    answer = run()
+    runDurations.append(time() - startTime)
+
+averageRuntime = mean(runDurations)
+print(f"Answer: {answer}")
+print(f"Runtime: {round(averageRuntime, 3)}s")
+    
+
