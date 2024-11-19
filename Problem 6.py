@@ -8,6 +8,10 @@
 #
 # Find the difference between the sum of the squares of the first one hundred natural numbers and the square of the sum.
 # Answer: 25164150
+# Average Runtime: 0.0s
+
+from time import time
+from statistics import mean
 
 
 def getSumOfSquares(limit : int):
@@ -21,13 +25,28 @@ def getSquareOfSum(limit : int):
     squareOfSum : int = sumOfList * sumOfList
     return squareOfSum
 
-
-def run(limit = 100):
+def run():
+    limit = 100
     sumOfSquares : int = getSumOfSquares(limit)
     squareOfSum : int = getSquareOfSum(limit)
 
     answer : int = squareOfSum - sumOfSquares
     return answer
 
-answer : int = run()
-print(answer)
+# ================================
+# NO PROBLEM LOGIC BELOW THIS LINE
+# ================================
+
+runCount = 10
+runDurations = []
+
+for count in range(runCount):
+    print(f"Run: {count + 1}")
+    startTime = time()
+    answer = run()
+    runDurations.append(time() - startTime)
+
+averageRuntime = mean(runDurations)
+print(f"Answer: {answer}")
+print(f"Runtime: {round(averageRuntime, 3)}s")
+    
