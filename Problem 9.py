@@ -6,44 +6,21 @@
 # There exists exactly one Pythagorean triplet for which a + b + c = 1000.
 # Find the product abc.
 # Answer: 31875000
+# Average Runtime: 0.1s
 
-'''
-from math import sqrt
-
-triCir = 50
-c = triCir/2
-b = 2
-
-while True:
-    sqrA = int(c - (b * b))
-
-    if sqrA <= 0:
-        print('ERROR: Less Than Zero')
-        break
-
-    a = sqrt(sqrA)
-
-    if str(a)[-2:] == '.0':
-        break
-
-    b += 1
-
-c = sqrt(c)
-
-print(a,b,c)'''
-
+from time import time
+from statistics import mean
 from math import sqrt, prod
 
 def findTriplets(targetNumber : int):
-
     for a in range(1, targetNumber):
         for b in range(1, targetNumber):
-            aSqr : int = a * a
-            bSqr : int = b * b
-            cSqr : int = aSqr + bSqr
+            aSqr = a * a
+            bSqr = b * b
+            cSqr = aSqr + bSqr
             c : any = sqrt(cSqr)
             
-            tripletTuple : tuple[int, int, int] = (int(a), int(b), int(c))
+            tripletTuple = (int(a), int(b), int(c))
             
             if c % 1 == 0:
                 if sum(tripletTuple) == targetNumber:
@@ -56,12 +33,25 @@ def findTriplets(targetNumber : int):
 
 
 def run():
-    targetNumber : int = 1000
-    tripletTuple : tuple[int, int, int] = findTriplets(targetNumber)
-    answer : int = prod(tripletTuple)
+    targetNumber = 1000
+    tripletTuple = findTriplets(targetNumber)
+    answer = prod(tripletTuple)
+    return answer
 
-    print(answer)
+# ================================
+# NO PROBLEM LOGIC BELOW THIS LINE
+# ================================
 
+runCount = 10
+runDurations = []
 
+for count in range(runCount):
+    print(f"Run: {count + 1}")
+    startTime = time()
+    answer = run()
+    runDurations.append(time() - startTime)
 
-run()
+averageRuntime = mean(runDurations)
+print(f"Answer: {answer}")
+print(f"Runtime: {round(averageRuntime, 3)}s")
+    
