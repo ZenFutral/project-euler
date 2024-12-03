@@ -1,5 +1,5 @@
 # Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
-listOfNumbers = [
+list_of_nums = [
 37107287533902102798797998220837590246510135740250,
 46376937677490009712648124896970078050417018260538,
 74324986199524741059474233309513058123726617309629,
@@ -104,33 +104,12 @@ listOfNumbers = [
 # Answer: 5537376230
 # Average Runtime: 0.0s
 
-from time import time
-from statistics import mean
+from custom_modules.script_report import reporter
 
-
-def run():
-    sumOfNumbers = sum(listOfNumbers)
-    answer = str(sumOfNumbers)[:10]
+def main() -> int:
+    sumOfNumbers: int = sum(list_of_nums)
+    answer: int = int(str(sumOfNumbers)[:10])
 
     return answer
 
-# ================================
-# NO PROBLEM LOGIC BELOW THIS LINE
-# ================================
-
-runCount = 10
-runDurations = []
-masterStart = time()
-
-for count in range(runCount):
-    print(f"Run: {count + 1} --- Current Runtime: {round(time() - masterStart, 3)}")
-    print(f"")
-    startTime = time()
-    answer = run()
-    runDurations.append(time() - startTime)
-
-averageRuntime = mean(runDurations)
-print("===================")
-print(f"Answer: {answer}")
-print(f"Runtime: {round(averageRuntime, 3)}s")
-    
+reporter(main_function= main)

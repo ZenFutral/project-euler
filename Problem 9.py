@@ -6,52 +6,35 @@
 # There exists exactly one Pythagorean triplet for which a + b + c = 1000.
 # Find the product abc.
 # Answer: 31875000
-# Average Runtime: 0.1s
+# Average Runtime: 0.041s
 
-from time import time
-from statistics import mean
+from custom_modules.script_report import reporter
 from math import sqrt, prod
 
-def findTriplets(targetNumber : int):
-    for a in range(1, targetNumber):
-        for b in range(1, targetNumber):
-            aSqr = a * a
-            bSqr = b * b
-            cSqr = aSqr + bSqr
-            c : any = sqrt(cSqr)
+def findTriplets(target_num : int) -> tuple[int, int, int]:
+    for a in range(1, target_num):
+        for b in range(1, target_num):
+            a_sqr: int      = a * a
+            b_sqr: int      = b * b
+            c_sqr: int      = a_sqr + b_sqr
+            c: int | float  = sqrt(c_sqr)
             
-            tripletTuple = (int(a), int(b), int(c))
+            triplet_tuple: tuple[int, int, int] = (int(a), int(b), int(c))
             
             if c % 1 == 0:
-                if sum(tripletTuple) == targetNumber:
-                    return tripletTuple
+                if sum(triplet_tuple) == target_num:
+                    return triplet_tuple
                 
-                elif sum(tripletTuple) > 1000:
+                elif sum(triplet_tuple) > 1000:
                     break 
     
-    return -1
+    return (-1, -1, -1)
 
 
-def run():
-    targetNumber = 1000
-    tripletTuple = findTriplets(targetNumber)
-    answer = prod(tripletTuple)
+def main() -> int:
+    target_num: int = 1000
+    triplet_tuple: tuple[int, int, int] = findTriplets(target_num)
+    answer: int = prod(triplet_tuple)
     return answer
 
-# ================================
-# NO PROBLEM LOGIC BELOW THIS LINE
-# ================================
-
-runCount = 10
-runDurations = []
-
-for count in range(runCount):
-    print(f"Run: {count + 1}")
-    startTime = time()
-    answer = run()
-    runDurations.append(time() - startTime)
-
-averageRuntime = mean(runDurations)
-print(f"Answer: {answer}")
-print(f"Runtime: {round(averageRuntime, 3)}s")
-    
+reporter(main_function= main)

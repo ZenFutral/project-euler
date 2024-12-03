@@ -1,6 +1,6 @@
 # In the 20x20 grid below, four numbers along a diagonal line have been marked in red.
 
-numberGrid = [
+num_grid: list[list[int]] = [
 [8, 2, 22, 97, 38, 15, 0, 40, 0, 75, 4, 5, 7, 78, 52, 12, 50, 77, 91, 8],
 [49, 49, 99, 40, 17, 81, 18, 57, 60, 87, 17, 40, 98, 43, 69, 48, 4, 56, 62, 0],
 [81, 49, 31, 73, 55, 79, 14, 29, 93, 71, 40, 67, 53, 88, 30, 3, 49, 13, 36, 65],
@@ -28,85 +28,70 @@ numberGrid = [
 # Answer: 70600674
 # Average Runtime: 0.001s
 
-from time import time
-from statistics import mean
+from custom_modules.script_report import reporter
 from math import prod
 
-def checkHorizontal(count : int, numberGrid : list[list[int]]):
+def checkHorizontal(count: int, num_grid: list[tuple] | list[list]) -> list[list[int]]:
     # Scans rows one at a time, grabbing the first {count} index's
     # Once a scan is complete, removes the first part of a row
 
-    adjacentNumbersList = []
+    adj_num_list: list[list[int]] = []
 
-    for row in numberGrid:
+    for r in num_grid:
+        row: list[int] = list(r) # Resolves tuple to list after rotating the grid
         while len(row) >= count:
-            adjacentNumbersList.append(row[0:4])
+            adj_num_list.append(row[0:4])
             row = row[1:]
     
-    return adjacentNumbersList
+    return adj_num_list
 
-def checkDiagonal(count : int, numberGrid : list[list[int]]):
-    adjacentNumbersList = []
-    croppedRange = (len(numberGrid) - count) + 1    # Prevents index overflow out of range, but need to add one for exclusive ranges
+def checkDiagonal(count: int, num_grid: list[list[int]]) -> list[list[int]]:
+    adj_num_list: list[list[int]] = []
+    cropped_range: int = (len(num_grid) - count) + 1    # Prevents index overflow out of range, but need to add one for exclusive ranges
 
-    for ri in range(croppedRange):  # Iterates through each row
-        for ci in range(croppedRange):  # Iterates through each cell, setting top-left start 
-            adjacentChunk = []
+    for ri in range(cropped_range):  # Iterates through each row
+        for ci in range(cropped_range):  # Iterates through each cell, setting top-left start 
+            adj_chunk: list[int] = []
 
             for modifer in range(count):    # Modifies the row & cell index to all for the 4 diagonal points
-                rowIndex = ri + modifer
-                cellIndex = ci + modifer
-                gridValue = numberGrid[rowIndex][cellIndex]
+                row_idx:    int = ri + modifer
+                cell_idx:   int = ci + modifer
+                grid_value: int = num_grid[row_idx][cell_idx]
 
-                adjacentChunk.append(gridValue)
+                adj_chunk.append(grid_value)
             
-            adjacentNumbersList.append(adjacentChunk)
+            adj_num_list.append(adj_chunk)
 
-    return adjacentNumbersList
+    return adj_num_list
 
-def mergeLists(listOfLists):
-    mergedList = []
+def mergeLists(listOfLists) -> list[list[int]]:
+    merged_list: list = []
 
-    [mergedList.extend(i) for i in listOfLists]
+    [merged_list.extend(i) for i in listOfLists]    #type: ignore
 
-    return mergedList
+    return merged_list
 
 # Instead of writing 4 unique functions for each desired direction. I wrote 2, and rotated/flipped the grid to the desired orientation
-def run():
-    adjacentCount = 4
+def main() -> int:
+    adj_count: int = 4
 
-    listLR = checkHorizontal(adjacentCount, numberGrid)
+    list_lr: list[list[int]]    = checkHorizontal(adj_count, num_grid)
 
-    rotatedGrid = list(zip(*numberGrid[::-1]))
-    listUD = checkHorizontal(adjacentCount, rotatedGrid)
+    rotated_grid: list[tuple]   = list(zip(*num_grid[::-1]))
+    list_ud: list[list[int]]    = checkHorizontal(adj_count, rotated_grid)
 
-    listDDR = checkDiagonal(adjacentCount, numberGrid)
+    list_ddr: list[list[int]]   = checkDiagonal(adj_count, num_grid)
 
-    flippedGrid = list(reversed(numberGrid))
-    listDUR = checkDiagonal(adjacentCount, flippedGrid)
+    flipped_grid = list(reversed(num_grid))
+    list_dur: list[list[int]]   = checkDiagonal(adj_count, flipped_grid)
 
-    masterList = mergeLists([listLR, listUD, listDUR, listDDR])
+    master_list: list[list[int]] = mergeLists([list_lr, list_ud, list_dur, list_ddr])
 
-    productList = [prod(i) for i in masterList]
+    product_list: list[int]     = [prod(i) for i in master_list]
 
-    answer = max(productList)
+    answer: int = max(product_list)
     return answer
 
-# ================================
-# NO PROBLEM LOGIC BELOW THIS LINE
-# ================================
-
-runCount = 10
-runDurations = []
-
-for count in range(runCount):
-    print(f"Run: {count + 1}")
-    startTime = time()
-    answer = run()
-    runDurations.append(time() - startTime)
-
-averageRuntime = mean(runDurations)
-print(f"Answer: {answer}")
-print(f"Runtime: {round(averageRuntime, 3)}s")
+reporter(main_function= main)
     
 

@@ -3,38 +3,19 @@
 # How many such routes are there through a 20 x 20grid?
 # 
 # Answer: 137846528820
-# Average Runtime: 
+# Average Runtime: 0.000s
 
-from time import time
-from statistics import mean
+from custom_modules.script_report import reporter
 from math import factorial
 
 
 def main() -> int:
-    gridWidth = 20
-    totalMoves = gridWidth + gridWidth
+    grid_width: int = 20
+    total_moves: int = grid_width + grid_width
     
-    answer: int = int(factorial(totalMoves) / (factorial(gridWidth) * factorial(gridWidth)))
+    answer: int = int(factorial(total_moves) / (factorial(grid_width) * factorial(grid_width)))
 
     return answer
 
-# ================================
-# NO PROBLEM LOGIC BELOW THIS LINE
-# ================================
-
-runCount: int = 10
-runDurations: list[float] = []
-masterStart: float = time()
-
-if __name__ == '__main__':
-    for count in range(runCount):
-        print(f"Run: {count + 1} --- Current Runtime: {round(time() - masterStart, 1)}")
-        startTime: float = time()
-        answer = main()
-        runDurations.append(time() - startTime)
-
-    averageRuntime = mean(runDurations)
-    print("===================")
-    print(f"Answer: {answer}")
-    print(f"Runtime: {round(averageRuntime, 3)}s")
+reporter(main_function= main)
     

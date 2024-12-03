@@ -2,35 +2,18 @@
 # What is the sum of the digits of the number 2^1000.
 
 # Answer: 1366
-# Average Runtime: 0.0s
+# Average Runtime: 0.000s
 
-from time import time
-from statistics import mean
+from custom_modules.script_report import reporter
 
-def run():
-    power = 1000
-    number = 2 ** power
-    digitStringList = list(str(number))
+def main() -> int:
+    power: int  = 1000
+    number: int = 2 ** power
+    list_of_digits_as_str: list[str] = list(str(number))
 
-    digitIntList = [int(i) for i in digitStringList]
-    answer = sum(digitIntList)
+    list_of_digits_as_int: list[int] = [int(d) for d in list_of_digits_as_str]
+    answer: int = sum(list_of_digits_as_int)
 
     return answer
 
-# ================================
-# NO PROBLEM LOGIC BELOW THIS LINE
-# ================================
-
-runCount = 10
-runDurations = []
-
-for count in range(runCount):
-    print(f"Run: {count + 1}")
-    startTime = time()
-    answer = run()
-    runDurations.append(time() - startTime)
-
-averageRuntime = mean(runDurations)
-print(f"Answer: {answer}")
-print(f"Runtime: {round(averageRuntime, 3)}s")
-    
+reporter(main_function= main)

@@ -4,37 +4,23 @@
 # Answer: 4613732
 # Average Runtime: 0.0s
 
-from time import time
-from statistics import mean
+from custom_modules.script_report import reporter
 
-runCount = 10
-runDurations = []
-
-def run():
-    sequence : list[int] = [1, 2]
-    maximum : int = 4000000
-    evenSequence : list[int] = []
+def main() -> int:
+    sequence:       list[int]   = [1, 2]
+    maximum:        int         = 4000000
+    even_sequence:  list[int]   = []
 
     while sequence[-1] <= maximum:
-        num1 : int = sequence[-1]
-        num2 : int = sequence[-2]
-        num3 : int = num1 + num2
+        num1: int = sequence[-1]
+        num2: int = sequence[-2]
+        num3: int = num1 + num2
 
         sequence.append(num3)
 
-    [evenSequence.append(num) for num in sequence if num % 2 == 0]
+    [even_sequence.append(num) for num in sequence if num % 2 == 0] #type: ignore
 
-    answer : int = sum(evenSequence)
+    answer: int = sum(even_sequence)
     return answer
 
-# ================================
-# NO PROBLEM LOGIC BELOW THIS LINE
-# ================================
-for count in range(runCount):
-    startTime = time()
-    answer = run()
-    runDurations.append(time() - startTime)
-
-averageRuntime = mean(runDurations)
-print(f"Answer: {answer}")
-print(f"Runtime: {round(averageRuntime, 10)}s")
+reporter(main_function= main)

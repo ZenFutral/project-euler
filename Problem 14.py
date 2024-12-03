@@ -14,8 +14,7 @@
 # Answer: 837799
 # Average Runtime: 33.03s
 
-from time import time
-from statistics import mean
+from custom_modules.script_report import reporter
 
 
 def main() -> int:
@@ -41,23 +40,4 @@ def main() -> int:
     answer = k[v.index(max(v))]
     return answer
 
-# ================================
-# NO PROBLEM LOGIC BELOW THIS LINE
-# ================================
-
-runCount: int = 10
-runDurations: list[float] = []
-masterStart: float = time()
-
-if __name__ == '__main__':
-    for count in range(runCount):
-        print(f"Run: {count + 1} --- Current Runtime: {round(time() - masterStart, 1)}")
-        startTime: float = time()
-        answer = main()
-        runDurations.append(time() - startTime)
-
-    averageRuntime = mean(runDurations)
-    print("===================")
-    print(f"Answer: {answer}")
-    print(f"Runtime: {round(averageRuntime, 3)}s")
-    
+reporter(main_function= main)

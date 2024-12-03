@@ -10,43 +10,25 @@
 # Answer: 25164150
 # Average Runtime: 0.0s
 
-from time import time
-from statistics import mean
+from custom_modules.script_report import reporter
 
+def getSumOfSquares(limit: int) -> int:
+    sqr_list:   list[int]   = [i*i for i in range(1, limit + 1)]
+    sum_of_sqr: int         = sum(sqr_list)
+    return sum_of_sqr
 
-def getSumOfSquares(limit : int):
-    squareList : list[int] = [i*i for i in range(1, limit + 1)]
-    sumOfSquares : int = sum(squareList)
-    return sumOfSquares
+def getSquareOfSum(limit: int) -> int:
+    sqr_list:       list[int]   = [i for i in range(1, limit + 1)]
+    sum_of_list:    int         = sum(sqr_list)
+    sqr_of_sum:     int         = sum_of_list * sum_of_list
+    return sqr_of_sum
 
-def getSquareOfSum(limit : int):
-    squareList : list[int] = [i for i in range(1, limit + 1)]
-    sumOfList : int = sum(squareList)
-    squareOfSum : int = sumOfList * sumOfList
-    return squareOfSum
+def main() -> int:
+    limit:      int = 100
+    sum_of_sqr: int = getSumOfSquares(limit)
+    sqr_of_sum: int = getSquareOfSum(limit)
 
-def run():
-    limit = 100
-    sumOfSquares : int = getSumOfSquares(limit)
-    squareOfSum : int = getSquareOfSum(limit)
-
-    answer : int = squareOfSum - sumOfSquares
+    answer:     int = sqr_of_sum - sum_of_sqr
     return answer
 
-# ================================
-# NO PROBLEM LOGIC BELOW THIS LINE
-# ================================
-
-runCount = 10
-runDurations = []
-
-for count in range(runCount):
-    print(f"Run: {count + 1}")
-    startTime = time()
-    answer = run()
-    runDurations.append(time() - startTime)
-
-averageRuntime = mean(runDurations)
-print(f"Answer: {answer}")
-print(f"Runtime: {round(averageRuntime, 3)}s")
-    
+reporter(main_function= main)

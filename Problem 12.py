@@ -12,61 +12,41 @@
 # We can see that 28 is the first triangle number to have over five divisors.
 # What is the value of the first triangle number to have over five hundred divisors?
 # Answer: 76576500
-# Average Runtime: 40.168s
+# Average Runtime: 28.938s
 
-from time import time
-from statistics import mean
+from custom_modules.script_report import reporter
 from math import sqrt
 
-def nextTriangleNumber(triangleNumbers : list[int]):
-    newTriNum = triangleNumbers[-1] + len(triangleNumbers) + 1
-    return(newTriNum)
+def nextTriangleNumber(tri_num_list : list[int]) -> int:
+    new_tri_num = tri_num_list[-1] + len(tri_num_list) + 1
+    return(new_tri_num)
 
-def getDivisorCount(number : int):
-    upperBound = int(sqrt(number)) + 1
-    counter = 1
-    divisors = [1, number]
+def getDivisorCount(number : int) -> int:
+    upper_bound: int = int(sqrt(number)) + 1
+    counter: int = 1
+    divisors: list[int] = [1, number]
 
-    for counter in range(1,upperBound):
+    for counter in range(1,upper_bound):
         if counter in divisors:
             continue
 
         if number % counter == 0:
             divisors.append(counter)
-            divisors.append(number / counter)
+            divisors.append(int(number / counter))
 
     return len(divisors)
 
-def run():
-    divisorCount = 0
-    triNums = [1]
+def main() -> int:
+    divisor_count: int = 0
+    tri_num_list: list[int] = [1]
 
-    while divisorCount < 500:
-        triNums.append(nextTriangleNumber(triNums))
+    while divisor_count < 500:
+        tri_num_list.append(nextTriangleNumber(tri_num_list))
         
-        currentTriNum = triNums[-1]
-        divisorCount = getDivisorCount(currentTriNum)
+        current_tri_num = tri_num_list[-1]
+        divisor_count = getDivisorCount(current_tri_num)
 
-    answer = currentTriNum
+    answer: int = current_tri_num
     return answer
 
-# ================================
-# NO PROBLEM LOGIC BELOW THIS LINE
-# ================================
-
-runCount = 10
-runDurations = []
-masterStart = time()
-
-for count in range(runCount):
-    print(f"Run: {count + 1} --- Current Runtime: {round(time() - masterStart, 3)}")
-    print(f"")
-    startTime = time()
-    answer = run()
-    runDurations.append(time() - startTime)
-
-averageRuntime = mean(runDurations)
-print("===================")
-print(f"Answer: {answer}")
-print(f"Runtime: {round(averageRuntime, 3)}s")
-    
+reporter(main_function= main)    

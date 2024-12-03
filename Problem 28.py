@@ -12,53 +12,34 @@
 # Answer: 669171001
 # Average Runtime: 0.001s
 
-from time import time
-from statistics import mean
+from custom_modules.script_report import reporter
 
-def getRowCount(numUpdater: int) -> int:
-    return numUpdater + 1
-
-
+def getRowCount(num_modifier: int) -> int:
+    return num_modifier + 1
 
 def main() -> int:
-    running: bool = True
-    currentNum: int = 1
-    numUpdater: int = 0
-    updateTrigger: int = 0
-    rowCount: int = 1   # This variable 'jumps-the-gun' and updates it's row count 1 number early (ie. number 9 flags 5th row)
-    diagonalInts: list[int] = [1]   # Removes need for advanced logic to handle 1-9 higher count cycle 
+    running:        bool = True
+    current_num:    int = 1
+    num_modifier:   int = 0
+    while_counter:  int = 0
+    row_count:      int = 1   # This variable 'jumps-the-gun' and updates it's row count 1 number early (ie. number 9 flags 5th row)
+    diagonal_ints:  list[int] = [1]   # Removes need for advanced logic to handle 1-9 higher count cycle 
 
     while running == True:  
-        if updateTrigger % 4 == 0:  # When currentNum is the highest on ring, advance to next ring
-            numUpdater += 2
+        if while_counter % 4 == 0:  # When current_num is the highest on ring, advance to next ring
+            num_modifier += 2
         
-        rowCount = getRowCount(numUpdater)
-        if rowCount > 1001:
+        row_count = getRowCount(num_modifier)
+        if row_count > 1001:
             running = False
             break
 
-        currentNum += numUpdater
-        diagonalInts.append(currentNum)
+        current_num += num_modifier
+        diagonal_ints.append(current_num)
         
-        updateTrigger += 1
+        while_counter += 1
 
-    answer: int = sum(diagonalInts)
+    answer: int = sum(diagonal_ints)
     return answer
 
-# ================================
-# NO PROBLEM LOGIC BELOW THIS LINE
-# ================================
-
-runCount: int = 10
-runDurations: list[float] = []
-startTime: float = time()
-
-if __name__ == '__main__':
-    print(f"Executing script {runCount} times...")
-    for count in range(runCount):
-        answer: int = main()
-        print(f"Run: {count} --- Answer: {answer} --- Total Runtime: {round(time() - startTime, 1)}s", end="\r")
-
-    averageRuntime: float = (time() - startTime) / runCount
-    print(f"Executing Finished --- Answer: {answer} --- Average Runtime: {round(averageRuntime, 3)}s --- Total Runtime: {round(time() - startTime, 3)}s")
-    
+reporter(main_function= main)

@@ -13,11 +13,10 @@
 # Answer: 16695334890
 # Average Runtime: 5.601s
 
-from time import time
-from statistics import mean
+from custom_modules.script_report import reporter
 from itertools import permutations
 
-idxKeyDict: dict[tuple[int, int], int] = {
+idx_key_dict: dict[tuple[int, int], int] = {
     (1, 4): 2,
     (2, 5): 3,
     (3, 6): 5,
@@ -28,11 +27,11 @@ idxKeyDict: dict[tuple[int, int], int] = {
 }
 
 def hasTrait(number : str) -> bool:
-    for key, value in idxKeyDict.items():
+    for key, value in idx_key_dict.items():
 
-        idxAsInt: int = int(number[key[0]:key[1]])
+        idx_as_int: int = int(number[key[0]:key[1]])
 
-        if idxAsInt % value == 0:
+        if idx_as_int % value == 0:
             continue
 
         else:
@@ -41,34 +40,15 @@ def hasTrait(number : str) -> bool:
     return True
 
 def get0To9Pandigitals() -> set[str]:
-    digitStr: str = '0123456789'
-    setOfPandigitals: set[str] = {''.join(p) for p in permutations(digitStr)}
-    return setOfPandigitals
+    digit_str: str = '0123456789'
+    set_of_pandigs: set[str] = {''.join(p) for p in permutations(digit_str)}
+    return set_of_pandigs
 
 def main() -> int:
-    setOfPandigitals: set[str] = get0To9Pandigitals()
-    pandigitalsWithTrait: list[str] = [i for i in list(setOfPandigitals) if hasTrait(i)]
-    pandigitalsToInt: list[int] = [int(i) for i in pandigitalsWithTrait]
-    answer: int = sum(pandigitalsToInt)
+    set_of_pandigs: set[str] = get0To9Pandigitals()
+    pandigs_with_trait: list[str] = [i for i in list(set_of_pandigs) if hasTrait(i)]
+    pandig_ints: list[int] = [int(i) for i in pandigs_with_trait]
+    answer: int = sum(pandig_ints)
     return answer
 
-# ================================
-# NO PROBLEM LOGIC BELOW THIS LINE
-# ================================
-
-runCount: int = 10
-runDurations: list[float] = []
-masterStart: float = time()
-
-if __name__ == '__main__':
-    for count in range(runCount):
-        print(f"Run: {count + 1} --- Current Runtime: {round(time() - masterStart, 1)}")
-        startTime: float = time()
-        answer = main()
-        runDurations.append(time() - startTime)
-
-    averageRuntime = mean(runDurations)
-    print("===================")
-    print(f"Answer: {answer}")
-    print(f"Runtime: {round(averageRuntime, 3)}s")
-    
+reporter(main_function= main)
