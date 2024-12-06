@@ -33,8 +33,7 @@ sudoku_puzzles: dict[str, list[list[int]]] = {
         [0, 0, 6, 7, 0, 8, 2, 0, 0],
         [0, 0, 2, 6, 0, 9, 5, 0, 0],
         [8, 0, 0, 2, 0, 3, 0, 0, 9],
-        [0, 0, 5, 0, 1, 0, 3, 0, 0] 
-    ], 
+        [0, 0, 5, 0, 1, 0, 3, 0, 0]], 
     "Grid 02": [
         [2, 0, 0, 0, 8, 0, 3, 0, 0],
         [0, 6, 0, 0, 7, 0, 0, 8, 4],
@@ -44,8 +43,7 @@ sudoku_puzzles: dict[str, list[list[int]]] = {
         [4, 0, 2, 7, 0, 6, 0, 0, 0],
         [3, 0, 1, 0, 0, 7, 0, 4, 0],
         [7, 2, 0, 0, 4, 0, 0, 6, 0],
-        [0, 0, 4, 0, 1, 0, 0, 0, 3]
-    ],
+        [0, 0, 4, 0, 1, 0, 0, 0, 3]],
     "Grid 03": [
         [0, 0, 0, 0, 0, 0, 9, 0, 7],
         [0, 0, 0, 4, 2, 0, 1, 8, 0],
@@ -530,56 +528,204 @@ sudoku_puzzles: dict[str, list[list[int]]] = {
 
 from custom_modules.script_report import reporter
 
-def getCellSqr(cell_idx: tuple[int, int], grid: list[list[int]]) -> list[int]:
-    sqr_values: list[int] = []
+class Grid:
+    '''        LABELING SCHEME
 
-    # To-Do
+        c1 c2 c3  c4 c5 c6  c7 c8 c9
+        ------------------------------
+    r1 | _  _  _ | _  _  _ | _  _  _     
+    r2 | _  b1 _ | _  b2 _ | _  b3 _ 
+    r3 | _  _  _ | _  _  _ | _  _  _ 
+        |-----------------------------
+    r4 | _  _  _ | _  _  _ | _  _  _ 
+    r5 | _  b4 _ | _  b5 _ | _  b6 _ 
+    r6 | _  _  _ | _  _  _ | _  _  _ 
+        |-----------------------------
+    r7 | _  _  _ | _  _  _ | _  _  _ 
+    r8 | _  b7 _ | _  b8 _ | _  b9 _ 
+    r9 | _  _  _ | _  _  _ | _  _  _ 
 
-    return sqr_values
 
-def getCellCol(cell_idx: tuple[int, int], grid: list[list[int]]) -> list[int]:
-    col_values: list[int] = []
+    '''
 
-    # To-Do
+    def __init__(self, puzzle: list[list[int]]) -> None:
+        self.grid: list[list[Cell]] = self._initializeGrid(puzzle)
 
-    return col_values
+        self.value_grid: list[list[int]]
+        self.getGridValues()
 
-def getCellRow(cell_idx: tuple[int, int], grid: list[list[int]]) -> list[int]:
-    row_values: list[int] = []
+    def _initializeGrid(self, puzzle: list[list[int]]) -> list[list]: 
+        grid: list[list[Cell]] = []
 
-    # To-Do
+        for ri in range(len(puzzle)):   # Row Idx
+            row: list[int] = puzzle[ri]
+            new_row: list[Cell] = []
 
-    return row_values
+            for ci in range(len(row)):  # Colum Idx
+                cell_value: int = row[ci]
+                cell_idx = (ri, ci)
+                new_row.append(Cell(idx= cell_idx, grid= self, value= cell_value))
+            
+            grid.append(new_row)
 
-def getCellOptions(grid: list[list[int]]) -> dict[tuple[int, int], list[int]]:
-    cell_option_dict: dict[tuple[int, int], list[int]] = dict({})       # (row_idx, col_idx): [1, 2, 3, ...]
+        return grid           
 
-    # To-Do
+    def updatePossibleCellValues(self):
+        for r in self.grid: # Row in grid
+            for c in r:     # Cell in row
+                c.getPossibleValues()
+        
+        self.getGridValues()
 
-    return cell_option_dict
+    def getGridValues(self) -> None:
+        value_grid: list[list[int]] = []
 
-def solvePuzzle(grid: list[list[int]]) -> list[list[int]]:
+        for r in self.grid:
+            new_row: list[int] = []
+            for c in r:
+                new_row.append(c.value)
+            
+            value_grid.append(new_row)
+        
+        self.value_grid = value_grid
+
+    def getPuzzleCode(self) -> int:
+        return 123
+
+class Cell:
+    def __init__(self, idx: tuple[int, int], grid: Grid, value: int) -> None:
+        self.idx:               tuple[int, int] = idx
+        self.square:            int             = self._getSquareID()
+        self.grid:              Grid            = grid
+        self.value:             int             = value
+        self.possible_values:   set[int]
     
-    # To-Do
+        # If cell is initialized with a value, assume it is part of the puzzle problem
+        if self.value != 0:
+            self.locked = True
+        else:
+            self.locked = False
 
-    return [[1]]
+    def _getSquareID(self) -> int:
+        row: int = self.idx[0]
+        col: int = self.idx[1]
 
-def getPuzzleCode(grid: list[list[int]]) -> int:
+        # Offsets for division logic
+        row += 3
+        col += 3
 
-    # To-Do
+        r_id = row // 3
+        c_id = col // 3
+        
+        return r_id * c_id 
 
-    return 0
+    def getPossibleValues(self) -> None:
+        if self.value != 0:
+            return
+
+        values_in_sqr: list[int] = self._getCellSqr()
+        values_in_col: list[int] = self._getCellCol()
+        values_in_row: list[int] = self._getCellRow()
+
+        all_neighbors: list[int] = []
+        all_neighbors.extend(values_in_sqr)
+        all_neighbors.extend(values_in_col)
+        all_neighbors.extend(values_in_row)
+        all_neighbors_set: set[int] = set(all_neighbors)
+
+        possible_values_list: list = []
+
+        for v in range(1, 10):
+            if v in all_neighbors_set:
+                continue
+
+            possible_values_list.append(v)
+        
+        self.possible_values = set(possible_values_list)
+
+        if len(self.possible_values) == 1:
+            for value in self.possible_values:
+                self.value = value
+        
+    
+    def _getCellSqr(self) -> list[int]:
+        sqr_values: list[int] = []
+
+        for r in self.grid.grid:
+            for c in r: 
+                if c.square == self.square:
+                    sqr_values.append(c.value)
+
+        return sqr_values
+
+    def _getCellCol(self) -> list[int]:
+        col_values: list[int] = []
+
+        for r in self.grid.grid:    # Row in grid
+            col_values.append(r[self.idx[1]].value)
+
+        return col_values
+
+    def _getCellRow(self) -> list[int]:
+        row_values: list[int] = []
+        row: list[Cell] = self.grid.grid[self.idx[0]]
+
+        for c in row:   # Cell in row
+            row_values.append(c.value)
+
+        return row_values
+
+def solvePuzzle(grid: Grid) -> Grid:
+    solving: bool = True
+    old_state: list[list[int]] = grid.value_grid
+
+    while solving:
+        printPuzzle(grid)
+        print('=============================')
+
+        grid.updatePossibleCellValues()
+        
+        new_state: list[list[int]] = grid.value_grid
+
+        if new_state == old_state:
+            solving = False
+        
+        else:
+            old_state = new_state
+        
+    
+
+    return grid
+
+def printPuzzle(grid: Grid) -> None:
+    puzzle: list[list[Cell]] = grid.grid
+
+    for r in puzzle:
+        row: list[int] = []
+        
+        for c in r:
+            row.append(c.value)
+        
+        print(row)
 
 def main() -> int:
     grid_list: list[list[list[int]]] = list(sudoku_puzzles.values())
     list_of_codes: list[int] = []
+    from time import time
+    start = time()
 
-    for puzzle in grid_list:
-        solution: list[list[int]] = solvePuzzle(grid= puzzle)
-        puzzle_code: int = getPuzzleCode(grid= solution)
-        list_of_codes.append(puzzle_code)
+    for g in grid_list:
+        grid: Grid = Grid(puzzle= g)
+        solved_puzzle: Grid = solvePuzzle(grid)
+        print("=========FINISHED===========")
+        printPuzzle(solved_puzzle)
 
+        break       # ONLY DOING FIRST PUZZLE FOR TESTING ==============================
+
+    print(time() - start)
     answer: int = sum(list_of_codes)
     return answer
 
-reporter(main_function= main)
+main()
+
+#reporter(main_function= main, run_count= 1)
